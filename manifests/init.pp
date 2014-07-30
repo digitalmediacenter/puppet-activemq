@@ -29,27 +29,16 @@ class activemq (
   $architecture_flag  = $activemq::params::architecture_flag,
 ) inherits activemq::params {
 
+  validate_re($package_type, '^rpm$|^tarball$')
+
   $wrapper = $package_type ? {
     'tarball' => "${home}/activemq/bin/linux-x86-${architecture_flag}/wrapper.conf",
     'rpm'     => '/etc/activemq/activemq-wrapper.conf',
   }
 
-  case $package_type {
-    'tarball': {
-      anchor { 'activemq::package::begin': } -> Class['activemq::package::tarball'] -> anchor { 'activemq::package::end': }
-      class { 'activemq::package::tarball':
-        version => $version,
-      }
-    }
-    'rpm': {
-      anchor { 'activemq::package::begin': } -> Class['activemq::package::rpm'] -> anchor { 'activemq::package::end': }
-      class { 'activemq::package::rpm':
-        version => $version,
-      }
-    }
-    default: {
-      fail("Invalid ActiveMQ package type: ${package_type}")
-    }
+  class { 'activemq::install':
+    package_type  =>  $package_type,
+    version       =>  $version,
   }
 
   if ! $console {
@@ -57,7 +46,7 @@ class activemq (
       changes => [ 'rm beans/import' ],
       incl    => "${activemq::home}/activemq/conf/activemq.xml",
       lens    => 'Xml.lns',
-      require => Anchor['activemq::package::end'],
+      require => Class['activemq::install']
       notify  => Service['activemq'],
     }
   }
@@ -67,10 +56,12 @@ class activemq (
       changes => [ "set wrapper.java.maxmemory ${max_memory}" ],
       incl    => $wrapper,
       lens    => 'Properties.lns',
-      require => Anchor['activemq::package::end'],
+      require => Class['activemq::install']
       notify  => Service['activemq'],
     }
   }
 
-  class { 'activemq::service': }
+  class { 'activemq::service':
+    require => Class['activemq::install']
+  }
 }

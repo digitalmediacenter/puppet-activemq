@@ -10,7 +10,6 @@ class activemq::stomp (
     ],
     incl    => "${activemq::home}/activemq/conf/activemq.xml",
     lens    => 'Xml.lns',
-    require => Anchor['activemq::package::end'],
     notify  => Service['activemq'],
     onlyif  => 'match beans/broker/transportConnectors/transportConnector[#attribute/name = "stomp+nio"] size == 0',
   }
