@@ -18,6 +18,7 @@ class activemq::package::tarball (
         home       => "${home}/${user}",
         managehome => false,
         system     => $system_user,
+        before     => Wget::Fetch['activemq_download'],
       }
     }
   }
@@ -27,6 +28,7 @@ class activemq::package::tarball (
       group { $group:
         ensure  => present,
         system  => $system_user,
+        before  => Wget::Fetch['activemq_download'],
       }
     }
   }
@@ -34,7 +36,6 @@ class activemq::package::tarball (
   wget::fetch { 'activemq_download':
     source      => "${activemq::apache_mirror}/activemq/apache-activemq/${version}/apache-activemq-${version}-bin.tar.gz",
     destination => "/usr/local/src/apache-activemq-${version}-bin.tar.gz",
-    require     => [User[$user],Group[$group]],
   } ->
   exec { 'activemq_untar':
     command => "tar xf /usr/local/src/apache-activemq-${version}-bin.tar.gz && chown -R ${user}:${group} ${home}/apache-activemq-${version}",
