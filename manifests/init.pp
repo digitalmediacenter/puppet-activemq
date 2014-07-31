@@ -46,7 +46,7 @@ class activemq (
       changes => [ 'rm beans/import' ],
       incl    => "${activemq::home}/activemq/conf/activemq.xml",
       lens    => 'Xml.lns',
-      require => Class['activemq::install']
+      require => Class['activemq::install'],
       notify  => Service['activemq'],
     }
   }
@@ -56,7 +56,7 @@ class activemq (
       changes => [ "set wrapper.java.maxmemory ${max_memory}" ],
       incl    => $wrapper,
       lens    => 'Properties.lns',
-      require => Class['activemq::install']
+      require => Class['activemq::install'],
       notify  => Service['activemq'],
     }
   }
