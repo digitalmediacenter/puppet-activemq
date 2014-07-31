@@ -32,8 +32,8 @@ class activemq (
 
   validate_re($package_type, '^rpm$|^tarball$')
 
-  if $activemqxml_source and ( $max_memory != undef or ! $console) {
-    fail('If you set activemqxml_source, max_memory needs to be undef and console needs to be true. Which means it won\'t be managed by this module')
+  if $activemqxml_source and ! $console {
+    fail('If you set activemqxml_source, console needs to be true. Which means it won\'t be managed by this module')
   }
 
   if $activemqxml_source {
