@@ -28,6 +28,7 @@ class activemq (
   $package_type       = $activemq::params::package_type,
   $architecture_flag  = $activemq::params::architecture_flag,
   $activemqxml_source = undef,
+  $camelxml_source    = undef,
 ) inherits activemq::params {
 
   validate_re($package_type, '^rpm$|^tarball$')
@@ -42,6 +43,15 @@ class activemq (
       owner   =>  $user,
       group   =>  $group,
       source  =>  $activemqxml_source,
+    }
+  }
+
+  if $camelxml_source {
+    file { "${activemq::home}/activemq/conf/camel.xml":
+      ensure => present,
+      owner  => $user,
+      group  => $group,
+      source => $camelxml_source,
     }
   }
 
