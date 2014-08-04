@@ -27,7 +27,17 @@ class activemq (
   $console            = $activemq::params::console,
   $package_type       = $activemq::params::package_type,
   $architecture_flag  = $activemq::params::architecture_flag,
+  $camelxml_source    = undef,
 ) inherits activemq::params {
+
+  if $camelxml_source {
+    file { "${activemq::home}/activemq/conf/camel.xml":
+      ensure => present,
+      owner  => $user,
+      group  => $group,
+      source => $camelxml_source,
+    }
+  }
 
   $wrapper = $package_type ? {
     'tarball' => "${home}/activemq/bin/linux-x86-${architecture_flag}/wrapper.conf",
