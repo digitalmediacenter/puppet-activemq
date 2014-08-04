@@ -15,20 +15,21 @@
 # This activemq class is currently targeting an X86_64 deploy, adjust as needed
 
 class activemq (
-  $apache_mirror      = $activemq::params::apache_mirror,
-  $version            = undef,
-  $home               = $activemq::params::home,
-  $user               = $activemq::params::user,
-  $group              = $activemq::params::group,
-  $system_user        = $activemq::params::system_user,
-  $manage_user        = $activemq::params::manage_user,
-  $manage_group       = $activemq::params::manage_group,
-  $max_memory         = $activemq::params::max_memory,
-  $console            = $activemq::params::console,
-  $package_type       = $activemq::params::package_type,
-  $architecture_flag  = $activemq::params::architecture_flag,
-  $activemqxml_source = undef,
-  $camelxml_source    = undef,
+  $apache_mirror           = $activemq::params::apache_mirror,
+  $version                 = undef,
+  $home                    = $activemq::params::home,
+  $user                    = $activemq::params::user,
+  $group                   = $activemq::params::group,
+  $system_user             = $activemq::params::system_user,
+  $manage_user             = $activemq::params::manage_user,
+  $manage_group            = $activemq::params::manage_group,
+  $max_memory              = $activemq::params::max_memory,
+  $console                 = $activemq::params::console,
+  $package_type            = $activemq::params::package_type,
+  $architecture_flag       = $activemq::params::architecture_flag,
+  $activemqxml_source      = undef,
+  $camelxml_source         = undef,
+  $install_mysql_connector = undef,
 ) inherits activemq::params {
 
   validate_re($package_type, '^rpm$|^tarball$')
@@ -75,6 +76,12 @@ class activemq (
     }
     default: {
       fail("Invalid ActiveMQ package type: ${package_type}")
+    }
+  }
+
+  if $install_mysql_connector {
+    class { 'activemq::package::mysql_connector':
+      version => $install_mysql_connector,
     }
   }
 
