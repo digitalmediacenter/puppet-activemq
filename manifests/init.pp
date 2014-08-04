@@ -30,6 +30,7 @@ class activemq (
   $activemqxml_source      = undef,
   $camelxml_source         = undef,
   $install_mysql_connector = undef,
+  $log4jprops_source       = undef,
 ) inherits activemq::params {
 
   validate_re($package_type, '^rpm$|^tarball$')
@@ -53,6 +54,15 @@ class activemq (
       owner  => $user,
       group  => $group,
       source => $camelxml_source,
+    }
+  }
+
+  if $log4jprops_source {
+    file { "${activemq::home}/activemq/conf/log4j.properties":
+      ensure => present,
+      owner  => $user,
+      group  => $group,
+      source => $log4jprops_source,
     }
   }
 
