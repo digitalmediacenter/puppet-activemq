@@ -8,7 +8,7 @@ class activemq::stomp (
       'set beans/broker/transportConnectors/transportConnector[last()+1]/#attribute/name stomp+nio',
       "set beans/broker/transportConnectors/transportConnector[last()]/#attribute/uri stomp+nio://0.0.0.0:${port}?transport.closeAsync=false",
     ],
-    incl    => "${activemq::home}/activemq/conf/activemq.xml",
+    incl    => "${activemq::home}/current/conf/activemq.xml",
     lens    => 'Xml.lns',
     require => Anchor['activemq::package::end'],
     notify  => Service['activemq'],

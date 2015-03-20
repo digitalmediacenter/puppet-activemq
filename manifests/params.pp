@@ -1,5 +1,5 @@
 class activemq::params (
-  $apache_mirror  = 'http://archive.apache.org/dist/',
+  $apache_mirror  = 'http://archive.apache.org/dist',
   $home           = '/usr/share',
   $user           = 'activemq',
   $group          = 'activemq',

@@ -5,7 +5,7 @@ class activemq::service (
     ensure     => running,
     name       => 'activemq',
     hasrestart => true,
-    hasstatus  => false,
+    hasstatus  => true,
     enable     => true,
     require    => Anchor['activemq::package::end'],
   }
